@@ -16,9 +16,11 @@ public class Solver {
 
     private List<String> validWords;
 
-    private char[] letters;
+    private char[] lettersAsChar;
 
-    private char centerLetter;
+    private String[] lettersAsString;
+
+    private String centerLetter;
 
     private String outerLetters;
 
@@ -27,16 +29,50 @@ public class Solver {
 
         englishWords = Files.readAllLines(Paths.get(this.getClass().getResource("words.txt").toURI()), Charset.defaultCharset());
 
-        letters = new char[7];
+        lettersAsChar = new char[7];
+
+        lettersAsString = new String[7];
 
         validWords = new ArrayList<String>();
     }
 
-    public void addLetters(char centerLetter, String outerLetters){
+    public void addLetters(String centerLetter, String outerLetters){
         this.centerLetter = centerLetter;
         this.outerLetters = outerLetters;
-        this.letters[0] = this.centerLetter;
-        outerLetters.getChars(0, this.outerLetters.length(),this.letters, 1);
+        this.centerLetter.getChars(0, 1, this.lettersAsChar, 0);
+        outerLetters.getChars(0, this.outerLetters.length(),this.lettersAsChar, 1);
+        for (int i = 0; i < lettersAsChar.length; i++) {
+            lettersAsString[i] = Character.toString(this.lettersAsChar[i]);
+        }
+    }
+
+    public void centerFilter(){
+        for (String string : this.englishWords) {
+            if(string.contains(this.centerLetter)){
+                this.validWords.add(string);
+            }
+        }
+    }
+
+    public void punctFilter(){
+        String[] punct = {".",",","''","-","&","/","`"};
+        for (int i = 0; i < this.validWords.size(); i++) {
+            for(int j = 0; j < punct.length; j++){
+                if(this.validWords.get(i).contains(punct[j])){
+                    this.validWords.remove(i);
+                    i--;
+                }
+            }
+        }
+    }
+    public void lengthFilter(){
+        for (int i = 0; i < this.validWords.size(); i++){
+            if(this.validWords.get(i).length() <= 3){
+                this.validWords.remove(i);
+                i--;
+            }
+        }
+        
     }
     
 }
