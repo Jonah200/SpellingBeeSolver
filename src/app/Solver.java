@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Creates a
+ * Object that solves the puzzle once addLetters and solve methods are used
  */
 public class Solver {
     private List<String> englishWords;
@@ -35,7 +35,7 @@ public class Solver {
 
         validWords = new ArrayList<String>();
     }
-
+    //adds the center and outer letters to an array. 
     public void addLetters(String centerLetter, String outerLetters){
         this.centerLetter = centerLetter;
         this.outerLetters = outerLetters;
@@ -45,7 +45,7 @@ public class Solver {
             lettersAsString[i] = Character.toString(this.lettersAsChar[i]);
         }
     }
-
+    //finds all words that contain the center letter in the puzzle in the words.txt file, and adds them to the validWords list
     public void centerFilter(){
         for (String string : this.englishWords) {
             if(string.contains(this.centerLetter)){
@@ -53,7 +53,7 @@ public class Solver {
             }
         }
     }
-
+    //removes words from the validWords list that contain punctuation
     public void punctFilter(){
         String[] punct = {".",",","''","-","&","/","`"};
         for (int i = 0; i < this.validWords.size(); i++) {
@@ -65,6 +65,7 @@ public class Solver {
             }
         }
     }
+    //removes words that are three letters or less in length
     public void lengthFilter(){
         for (int i = 0; i < this.validWords.size(); i++){
             if(this.validWords.get(i).length() <= 3){
