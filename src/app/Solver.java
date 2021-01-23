@@ -31,6 +31,8 @@ public class Solver {
 
         englishWords = Files.readAllLines(Paths.get(this.getClass().getResource("/2of4brif.txt").toURI()), Charset.defaultCharset());
 
+        englishWords.addAll(Files.readAllLines(Paths.get(this.getClass().getResource("/2of5core.txt").toURI()), Charset.defaultCharset()));
+
         lettersAsChar = new char[7];
 
         lettersAsString = new String[7];
