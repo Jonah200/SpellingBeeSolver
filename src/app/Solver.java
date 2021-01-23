@@ -110,13 +110,10 @@ public class Solver {
                 if(string.contains(Character.toString(c))){
                     System.out.println(validWords.indexOf(string) + " size: " + validWords.size() + " size: " + invalids.size() + " valid: " + (validWords.size() - invalids.size()) + " current word: " + string);
                     invalids.add(validWords.indexOf(string));
+                    validWords.set(validWords.indexOf(string), "invalid");
                     break;
                 }
             }
-        }
-        for (Integer integer : invalids) {
-            System.out.println(validWords.get(integer));
-            validWords.set(integer, "invalid");
         }
         for (int i = 0; i < validWords.size(); i++) {
             if(validWords.get(i).equals("invalid")){
