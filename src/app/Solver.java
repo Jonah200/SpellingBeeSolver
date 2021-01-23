@@ -1,6 +1,5 @@
 package app;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
@@ -8,8 +7,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.net.URI;
-import java.net.URL;
 
 /**
  * Object that solves the puzzle once addLetters and solve methods are used
@@ -32,7 +29,7 @@ public class Solver {
         
         englishWords = new ArrayList<String>();
 
-        englishWords = Files.readAllLines(Paths.get(this.getClass().getResource("/words.txt").toURI()), Charset.defaultCharset());
+        englishWords = Files.readAllLines(Paths.get(this.getClass().getResource("/2of4brif.txt").toURI()), Charset.defaultCharset());
 
         lettersAsChar = new char[7];
 
@@ -72,7 +69,7 @@ public class Solver {
     }
     //removes words from the validWords list that contain punctuation
     public void punctFilter(){
-        String[] punct = {".",",","''","-","&","/","`"};
+        String[] punct = {".",",","''","-","&","/","`","'"};
         for (int i = 0; i < this.validWords.size(); i++) {
             for(int j = 0; j < punct.length; j++){
                 if(this.validWords.get(i).contains(punct[j])){
@@ -86,34 +83,45 @@ public class Solver {
     //removes words that are three letters or less in length
     public void lengthFilter(){
         for (int i = 0; i < this.validWords.size(); i++){
-            if(this.validWords.get(i).length() <= 3){
+            if(this.validWords.get(i).length() <= 3 || this.validWords.get(i).length() > 20){
                 this.validWords.remove(i);
                 i--;
             }
         }
         
     }
-    //should take a word from the remaining valid words list, and turn it into a char[]. If one of the letters of the array are the equal to one of the letters in the lettersAsChar array, then it will add on to validLetterCount.
-    // If the final validLetterCount for the word is equal to the length of the word, then all of the letters are valid, and the word can be used.
+    
     public void finalElim(){
-        int validLetterCount = 0;
-        char[] currentWord;
-        
-        for (int i = 0; i < this.validWords.size(); i++) {
-            if(i < 0){
-                i = 0;
-            }
-            validLetterCount = 0;
-            currentWord = this.validWords.get(i).toCharArray();
-            for (int j = 0; j < currentWord.length - 2; j++) {
-                for (char c : lettersAsChar) {             
-                    if(currentWord[j] == c){
-                    validLetterCount++;             
-                    }
+        String al = "abcdefghijklmnopqrstuvwxyz";
+        char[] alpha = al.toCharArray();
+        int early;
+        for (char c : lettersAsChar) {
+            for (char d : alpha) {
+                if(d == c){
+                    early = al.indexOf(d);
+                    alpha[early] = '0';
+                    break;
                 }
             }
-            if(currentWord.length != validLetterCount){
-                this.validWords.remove(i);
+        }
+        List<Integer> invalids = new ArrayList<>();
+        for (String string : validWords) {
+            for (char c : alpha) {
+                if(string.contains(Character.toString(c))){
+                    System.out.println(validWords.indexOf(string) + " size: " + validWords.size() + " size: " + invalids.size() + " valid: " + (validWords.size() - invalids.size()) + " current word: " + string);
+                    invalids.add(validWords.indexOf(string));
+                    break;
+                }
+            }
+        }
+        for (Integer integer : invalids) {
+            System.out.println(validWords.get(integer));
+            validWords.set(integer, "invalid");
+        }
+        for (int i = 0; i < validWords.size(); i++) {
+            if(validWords.get(i).equals("invalid")){
+                validWords.remove(validWords.get(i));
+                System.out.println(validWords.size());
                 i--;
             }
         }
@@ -128,7 +136,9 @@ public class Solver {
         this.centerFilter();
         this.punctFilter();
         this.lengthFilter();
+        System.out.println(validWords.size());
         this.finalElim();
+        System.out.println(validWords.size());
     }
     
 }
