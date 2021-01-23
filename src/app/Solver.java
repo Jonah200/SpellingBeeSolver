@@ -1,5 +1,6 @@
 package app;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.charset.Charset;
@@ -7,6 +8,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.net.URI;
+import java.net.URL;
 
 /**
  * Object that solves the puzzle once addLetters and solve methods are used
@@ -25,9 +28,11 @@ public class Solver {
     private String outerLetters;
 
     public Solver() throws IOException, URISyntaxException {
+        //File file = new File("words.txt");
+        
         englishWords = new ArrayList<String>();
 
-        englishWords = Files.readAllLines(Paths.get(this.getClass().getResource("words.txt").toURI()), Charset.defaultCharset());
+        englishWords = Files.readAllLines(Paths.get(this.getClass().getResource("/words.txt").toURI()), Charset.defaultCharset());
 
         lettersAsChar = new char[7];
 
@@ -73,6 +78,7 @@ public class Solver {
                 if(this.validWords.get(i).contains(punct[j])){
                     this.validWords.remove(i);
                     i--;
+                    break;
                 }
             }
         }
@@ -92,17 +98,18 @@ public class Solver {
     public void finalElim(){
         int validLetterCount = 0;
         char[] currentWord;
-        int f = 0;
+        
         for (int i = 0; i < this.validWords.size(); i++) {
+            if(i < 0){
+                i = 0;
+            }
             validLetterCount = 0;
             currentWord = this.validWords.get(i).toCharArray();
-            f = 0;
-            for (int j = 0; j < currentWord.length; j++) {
-                if(currentWord[j] == this.lettersAsChar[f]){
-                    validLetterCount++;
-                    f++;
-                }else{
-                    f++;
+            for (int j = 0; j < currentWord.length - 2; j++) {
+                for (char c : lettersAsChar) {             
+                    if(currentWord[j] == c){
+                    validLetterCount++;             
+                    }
                 }
             }
             if(currentWord.length != validLetterCount){
@@ -110,9 +117,11 @@ public class Solver {
                 i--;
             }
         }
-        
-        
     }
+    
+        
+        
+    
 
     public void solve() {
         this.allLowerCase();
