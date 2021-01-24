@@ -107,10 +107,11 @@ public class Solver {
             }
         }
         List<Integer> invalids = new ArrayList<>();
+        System.out.println(englishWords.size());
         for (String string : validWords) {
             for (char c : alpha) {
                 if(string.contains(Character.toString(c))){
-                    System.out.println(validWords.indexOf(string) + " size: " + validWords.size() + " size: " + invalids.size() + " valid: " + (validWords.size() - invalids.size()) + " current word: " + string);
+                    System.out.println("Left to Sort: " + validWords.indexOf(string) + " Total to Sort: " + validWords.size() + " Invalid: " + invalids.size() + " Valid: " + (validWords.size() - invalids.size()) + " current word: " + string);
                     invalids.add(validWords.indexOf(string));
                     validWords.set(validWords.indexOf(string), "invalid");
                     break;
@@ -120,7 +121,7 @@ public class Solver {
         for (int i = 0; i < validWords.size(); i++) {
             if(validWords.get(i).equals("invalid")){
                 validWords.remove(validWords.get(i));
-                System.out.println(validWords.size());
+                System.out.println("Remaining: "+ validWords.size());
                 i--;
             }
         }
@@ -135,9 +136,8 @@ public class Solver {
         this.centerFilter();
         this.punctFilter();
         this.lengthFilter();
-        System.out.println(validWords.size());
         this.finalElim();
-        System.out.println(validWords.size());
+        System.out.println("Valid Words found: " + validWords.size());
     }
     
 }
